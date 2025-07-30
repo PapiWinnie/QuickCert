@@ -3,9 +3,24 @@ dotenv.config();
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import { writeFileSync, existsSync } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import authRoutes from './routes/auth.js';
 import ocrRoutes from './routes/ocr.js';
 import certificateRoutes from './routes/certificates.js';
+
+// Handle __dirname in ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Reconstruct credentials file on platforms like Render
+const credentialsPath = path.join(__dirname, 'gcloud-vision-key.json');
+
+if (process.env.GOOGLE_CREDENTIALS_JSON && !existsSync(credentialsPath)) {
+  writeFileSync(credentialsPath, process.env.GOOGLE_CREDENTIALS_JSON, 'utf8');
+  process.env.GOOGLE_APPLICATION_CREDENTIALS = credentialsPath;
+}
 
 // Load environment variables
 
