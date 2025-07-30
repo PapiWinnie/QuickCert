@@ -16,7 +16,7 @@ const RecordsPage = ({ hideHeader }) => {
       setLoading(true);
       setError('');
       try {
-        const res = await fetch('/api/certificates', {
+        const res = await fetch('https://quickcert.onrender.com/api/certificates', {
           headers: {
             Authorization: `Bearer ${auth.token}`,
           },

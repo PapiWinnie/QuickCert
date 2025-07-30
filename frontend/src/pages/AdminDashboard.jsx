@@ -19,7 +19,7 @@ const AdminDashboard = () => {
       setOfficerLoading(true);
       setOfficerError('');
       try {
-        const res = await fetch('/api/auth/officer', {
+        const res = await fetch('https://quickcert.onrender.com/api/auth/officer', {
           headers: { Authorization: `Bearer ${auth.token}` },
         });
         if (!res.ok) throw new Error('Failed to fetch officers');
@@ -43,7 +43,7 @@ const AdminDashboard = () => {
   const handleDeleteOfficer = async (id) => {
     if (!window.confirm('Are you sure you want to delete this officer?')) return;
     try {
-      const res = await fetch(`/api/auth/officer/${id}`, {
+      const res = await fetch(`https://quickcert.onrender.com/api/auth/officer/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${auth.token}` },
       });
@@ -61,7 +61,7 @@ const AdminDashboard = () => {
     setStatus('');
     setError('');
     try {
-      const res = await fetch('/api/auth/officer/register', {
+      const res = await fetch('https://quickcert.onrender.com/api/auth/officer/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

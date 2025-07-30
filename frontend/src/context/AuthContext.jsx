@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     // Tries officer login, falls back to admin
     const tryLogin = async (role) => {
-      const response = await fetch(`/api/auth/${role}/login`, {
+      const response = await fetch(`https://quickcert.onrender.com/api/auth/${role}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

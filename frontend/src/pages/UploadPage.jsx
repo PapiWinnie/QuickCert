@@ -43,7 +43,7 @@ const UploadPage = () => {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const res = await fetch('/api/ocr/upload', {
+      const res = await fetch('https://quickcert.onrender.com/api/ocr/upload', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${auth.token}`,
@@ -85,7 +85,7 @@ const UploadPage = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/certificates', {
+      const res = await fetch('https://quickcert.onrender.com/api/certificates', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
