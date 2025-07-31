@@ -118,98 +118,413 @@ const UploadPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
       <Header />
-      <main className="container p-6 mx-auto">
-        <div className="p-8 bg-white rounded-lg shadow-md max-w-xl mx-auto">
-          <h1 className="mb-6 text-3xl font-bold text-gray-800">Upload Certificate</h1>
-          {step === 1 && (
-            <form onSubmit={handleUpload} className="space-y-6">
-              <div>
-                <label className="block mb-2 font-medium text-gray-700">Select Image (PNG/JPG):</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  ref={fileInputRef}
-                  className="block w-full text-sm text-gray-700 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  disabled={loading}
-                />
-              </div>
-              {error && <p className="text-red-600 text-sm font-semibold">{error}</p>}
-              {loading && <Spinner />}
-              <button
-                type="submit"
-                className="w-full px-4 py-2 font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed"
-                disabled={loading}
-              >
-                {loading ? 'Uploading...' : 'Extract & Review'}
-              </button>
-            </form>
-          )}
+      <main style={{ padding: '24px', maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '12px',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          overflow: 'hidden'
+        }}>
+          {/* Header */}
+          <div style={{
+            padding: '24px 32px',
+            borderBottom: '1px solid #e5e7eb',
+            backgroundColor: '#f9fafb'
+          }}>
+            <h1 style={{
+              fontSize: '28px',
+              fontWeight: '700',
+              color: '#111827',
+              margin: '0'
+            }}>
+              {step === 1 && 'Upload Birth Certificate'}
+              {step === 2 && 'Review Extracted Data'}
+              {step === 3 && 'Success'}
+            </h1>
+            {step === 2 && (
+              <p style={{
+                margin: '8px 0 0 0',
+                color: '#6b7280',
+                fontSize: '14px'
+              }}>
+                Review and edit the extracted information before saving
+              </p>
+            )}
+          </div>
 
-          {step === 2 && (
-            <form onSubmit={handleSave} className="space-y-6">
-              <h2 className="text-xl font-bold mb-2">Review & Edit Extracted Data</h2>
-              <div className="grid grid-cols-1 gap-4">
-                {Object.entries(fields).map(([key, value]) => (
-                  <div key={key}>
-                    <label className="block mb-1 font-medium text-gray-700 capitalize">{key.replace(/([A-Z])/g, ' $1')}</label>
+          {/* Content */}
+          <div style={{ padding: '32px' }}>
+            {step === 1 && (
+              <form onSubmit={handleUpload} style={{ maxWidth: '500px' }}>
+                <div style={{ marginBottom: '24px' }}>
+                  <label style={{
+                    display: 'block',
+                    marginBottom: '8px',
+                    fontWeight: '600',
+                    color: '#374151',
+                    fontSize: '14px'
+                  }}>
+                    Select Certificate Image
+                  </label>
+                  <div style={{
+                    border: '2px dashed #d1d5db',
+                    borderRadius: '8px',
+                    padding: '32px',
+                    textAlign: 'center',
+                    backgroundColor: '#f9fafb',
+                    transition: 'all 0.2s',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => fileInputRef.current?.click()}
+                  onMouseEnter={(e) => {
+                    e.target.style.borderColor = '#6366f1';
+                    e.target.style.backgroundColor = '#f0f9ff';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.borderColor = '#d1d5db';
+                    e.target.style.backgroundColor = '#f9fafb';
+                  }}>
                     <input
-                      type="text"
-                      name={key}
-                      value={value}
-                      onChange={handleFieldChange}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      required
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      ref={fileInputRef}
+                      style={{ display: 'none' }}
+                      disabled={loading}
                     />
+                    <div style={{ fontSize: '48px', color: '#9ca3af', marginBottom: '16px' }}>📄</div>
+                    <p style={{
+                      fontSize: '16px',
+                      fontWeight: '500',
+                      color: '#374151',
+                      margin: '0 0 8px 0'
+                    }}>
+                      {file ? file.name : 'Click to select image'}
+                    </p>
+                    <p style={{
+                      fontSize: '14px',
+                      color: '#6b7280',
+                      margin: '0'
+                    }}>
+                      PNG, JPG, or JPEG files only
+                    </p>
                   </div>
-                ))}
-              </div>
-              <div>
-                <label className="block mb-1 font-medium text-gray-700">Raw OCR Text (for reference)</label>
-                <textarea
-                  value={rawText}
-                  readOnly
-                  className="block w-full px-3 py-2 border border-gray-200 rounded-md bg-gray-100 text-gray-600 text-xs"
-                  rows={4}
-                />
-              </div>
-              {error && <p className="text-red-600 text-sm font-semibold">{error}</p>}
-              {loading && <Spinner />}
-              <div className="flex space-x-2">
+                </div>
+                
+                {error && (
+                  <div style={{
+                    padding: '12px 16px',
+                    backgroundColor: '#fef2f2',
+                    border: '1px solid #fecaca',
+                    borderRadius: '6px',
+                    marginBottom: '24px'
+                  }}>
+                    <p style={{
+                      color: '#dc2626',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      margin: '0'
+                    }}>
+                      {error}
+                    </p>
+                  </div>
+                )}
+                
+                {loading && (
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '20px'
+                  }}>
+                    <Spinner />
+                  </div>
+                )}
+                
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 font-semibold text-white bg-green-600 rounded-md hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed"
-                  disabled={loading}
+                  disabled={loading || !file}
+                  style={{
+                    width: '100%',
+                    padding: '12px 24px',
+                    backgroundColor: loading || !file ? '#9ca3af' : '#6366f1',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    cursor: loading || !file ? 'not-allowed' : 'pointer',
+                    transition: 'background-color 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!loading && file) {
+                      e.target.style.backgroundColor = '#4f46e5';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!loading && file) {
+                      e.target.style.backgroundColor = '#6366f1';
+                    }
+                  }}
                 >
-                  {loading ? 'Saving...' : 'Save Record'}
+                  {loading ? 'Processing...' : 'Extract Data'}
                 </button>
+              </form>
+            )}
+
+            {step === 2 && (
+              <form onSubmit={handleSave}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
+                  {/* Form Fields */}
+                  <div>
+                    <h3 style={{
+                      fontSize: '18px',
+                      fontWeight: '600',
+                      color: '#111827',
+                      margin: '0 0 24px 0',
+                      paddingBottom: '12px',
+                      borderBottom: '2px solid #e5e7eb'
+                    }}>
+                      Certificate Information
+                    </h3>
+                    
+                    <div style={{ display: 'grid', gap: '20px' }}>
+                      {Object.entries(fields).map(([key, value]) => (
+                        <div key={key}>
+                          <label style={{
+                            display: 'block',
+                            marginBottom: '6px',
+                            fontWeight: '500',
+                            color: '#374151',
+                            fontSize: '14px'
+                          }}>
+                            {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                          </label>
+                          <input
+                            type="text"
+                            name={key}
+                            value={value}
+                            onChange={handleFieldChange}
+                            style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              border: '1px solid #d1d5db',
+                              borderRadius: '6px',
+                              fontSize: '14px',
+                              outline: 'none',
+                              transition: 'all 0.2s'
+                            }}
+                            onFocus={(e) => {
+                              e.target.style.borderColor = '#6366f1';
+                              e.target.style.boxShadow = '0 0 0 3px rgba(99, 102, 241, 0.1)';
+                            }}
+                            onBlur={(e) => {
+                              e.target.style.borderColor = '#d1d5db';
+                              e.target.style.boxShadow = 'none';
+                            }}
+                            required
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* OCR Text */}
+                  <div>
+                    <h3 style={{
+                      fontSize: '18px',
+                      fontWeight: '600',
+                      color: '#111827',
+                      margin: '0 0 24px 0',
+                      paddingBottom: '12px',
+                      borderBottom: '2px solid #e5e7eb'
+                    }}>
+                      Raw OCR Text
+                    </h3>
+                    <p style={{
+                      fontSize: '13px',
+                      color: '#6b7280',
+                      margin: '0 0 16px 0'
+                    }}>
+                      Reference the original extracted text below
+                    </p>
+                    <div style={{
+                      backgroundColor: '#f8fafc',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      padding: '16px',
+                      height: '400px',
+                      overflow: 'auto'
+                    }}>
+                      <pre style={{
+                        margin: '0',
+                        fontSize: '12px',
+                        lineHeight: '1.5',
+                        color: '#475569',
+                        fontFamily: 'monospace',
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-word'
+                      }}>
+                        {rawText || 'No text extracted'}
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+
+                {error && (
+                  <div style={{
+                    padding: '12px 16px',
+                    backgroundColor: '#fef2f2',
+                    border: '1px solid #fecaca',
+                    borderRadius: '6px',
+                    marginTop: '24px'
+                  }}>
+                    <p style={{
+                      color: '#dc2626',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      margin: '0'
+                    }}>
+                      {error}
+                    </p>
+                  </div>
+                )}
+
+                {loading && (
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '20px',
+                    marginTop: '24px'
+                  }}>
+                    <Spinner />
+                  </div>
+                )}
+
+                <div style={{
+                  display: 'flex',
+                  gap: '16px',
+                  marginTop: '32px',
+                  paddingTop: '24px',
+                  borderTop: '1px solid #e5e7eb'
+                }}>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    style={{
+                      flex: '1',
+                      padding: '12px 24px',
+                      backgroundColor: loading ? '#9ca3af' : '#10b981',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      cursor: loading ? 'not-allowed' : 'pointer',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!loading) {
+                        e.target.style.backgroundColor = '#059669';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!loading) {
+                        e.target.style.backgroundColor = '#10b981';
+                      }
+                    }}
+                  >
+                    {loading ? 'Saving...' : 'Save Record'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleReset}
+                    disabled={loading}
+                    style={{
+                      flex: '1',
+                      padding: '12px 24px',
+                      backgroundColor: '#f3f4f6',
+                      color: '#374151',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      cursor: loading ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!loading) {
+                        e.target.style.backgroundColor = '#e5e7eb';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!loading) {
+                        e.target.style.backgroundColor = '#f3f4f6';
+                      }
+                    }}
+                  >
+                    Upload Another
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {step === 3 && (
+              <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                <div style={{
+                  fontSize: '64px',
+                  marginBottom: '24px'
+                }}>✅</div>
+                <h2 style={{
+                  fontSize: '24px',
+                  fontWeight: '700',
+                  color: '#059669',
+                  margin: '0 0 16px 0'
+                }}>
+                  Record Saved Successfully!
+                </h2>
+                <p style={{
+                  fontSize: '16px',
+                  color: '#6b7280',
+                  margin: '0 0 8px 0'
+                }}>
+                  The birth certificate data has been saved to the database.
+                </p>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#9ca3af',
+                  margin: '0 0 32px 0'
+                }}>
+                  Redirecting to dashboard...
+                </p>
                 <button
-                  type="button"
-                  className="flex-1 px-4 py-2 font-semibold text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
-                  onClick={handleReset}
-                  disabled={loading}
+                  onClick={() => navigate('/dashboard')}
+                  style={{
+                    padding: '12px 24px',
+                    backgroundColor: '#6366f1',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = '#4f46e5';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = '#6366f1';
+                  }}
                 >
-                  Upload Another
+                  Go to Dashboard
                 </button>
               </div>
-            </form>
-          )}
-
-          {step === 3 && (
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-green-600 mb-4">Success!</h2>
-              <p className="mb-2">Birth certificate record saved.</p>
-              <p className="text-gray-500">Redirecting to dashboard...</p>
-              <button
-                className="mt-4 px-4 py-2 font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
-                onClick={() => navigate('/dashboard')}
-              >
-                Go to Dashboard Now
-              </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </main>
     </div>
