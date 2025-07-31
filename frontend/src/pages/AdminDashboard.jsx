@@ -82,9 +82,9 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
       <Header />
-      <main className="container p-6 mx-auto">
+      <main style={{ padding: '32px 2% 0 2%' }}>
         <div className="p-8 bg-white rounded-lg shadow-md max-w-xl mx-auto mb-8">
           <h1 className="mb-4 text-3xl font-bold text-gray-800">Admin Dashboard</h1>
           <h2 className="mb-6 text-xl font-semibold text-gray-700">Register a New Registry Officer</h2>
@@ -174,8 +174,20 @@ const AdminDashboard = () => {
           )}
         </div>
         {/* Admin can view all certificates below */}
-        <div className="p-8 bg-white rounded-lg shadow-md max-w-4xl mx-auto">
-          <h2 className="mb-4 text-2xl font-semibold text-gray-800">All Birth Certificates</h2>
+        <div style={{
+          padding: '32px',
+          backgroundColor: 'white',
+          borderRadius: '8px',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          width: '80%',
+          margin: '0 auto'
+        }}>
+          <h2 style={{
+            marginBottom: '16px',
+            fontSize: '24px',
+            fontWeight: '600',
+            color: '#1f2937'
+          }}>All Birth Certificates</h2>
           <RecordsPage hideHeader />
         </div>
       </main>

@@ -145,7 +145,7 @@ const RecordsPage = ({ hideHeader }) => {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
       {!hideHeader && <Header />}
-      <main style={{ width: '100%', padding: '0 10%' }}>
+      <main style={{ width: '100%', padding: '32px 2% 0 2%' }}>
         {/* Header Section */}
         <div style={{
           backgroundColor: 'white',
