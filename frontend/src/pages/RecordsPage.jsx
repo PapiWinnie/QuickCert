@@ -11,6 +11,15 @@ const RecordsPage = ({ hideHeader }) => {
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [exporting, setExporting] = useState(false);
+  const [filters, setFilters] = useState({
+    gender: '',
+    dateOfBirth: ''
+  });
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Get unique values for dropdowns
+  const uniqueGenders = [...new Set(records.map(record => record.gender))].filter(Boolean).sort();
+  const uniqueDates = [...new Set(records.map(record => record.dateOfBirth))].filter(Boolean).sort();
 
   useEffect(() => {
     const fetchRecords = async () => {
@@ -41,10 +50,44 @@ const RecordsPage = ({ hideHeader }) => {
     fetchRecords();
   }, [auth.token]);
 
-  // Filter records by search
-  const filteredRecords = records.filter((rec) =>
-    rec.fullName.toLowerCase().includes(search.toLowerCase())
-  );
+  // Filter records by search and filters
+  const filteredRecords = records.filter((rec) => {
+    // Name search filter
+    const nameMatch = rec.fullName.toLowerCase().includes(search.toLowerCase());
+    
+    // Gender filter - case insensitive
+    const genderMatch = !filters.gender || rec.gender.toLowerCase() === filters.gender.toLowerCase();
+    
+    // Date of birth filter - more flexible matching
+    let dobMatch = true;
+    if (filters.dateOfBirth && filters.dateOfBirth.trim()) {
+      const filterDate = filters.dateOfBirth.trim();
+      const recordDate = rec.dateOfBirth || '';
+      
+      // Try exact match first
+      if (recordDate === filterDate) {
+        dobMatch = true;
+      } else {
+        // Try partial match (contains the filter date)
+        dobMatch = recordDate.toLowerCase().includes(filterDate.toLowerCase());
+      }
+    }
+    
+    // Debug logging for first few records
+    if (records.indexOf(rec) < 3) {
+      console.log('Filtering record:', {
+        name: rec.fullName,
+        gender: rec.gender,
+        dateOfBirth: rec.dateOfBirth,
+        filters: filters,
+        nameMatch,
+        genderMatch,
+        dobMatch
+      });
+    }
+    
+    return nameMatch && genderMatch && dobMatch;
+  });
 
   // Export to CSV function
   const exportToCSV = () => {
@@ -102,7 +145,7 @@ const RecordsPage = ({ hideHeader }) => {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc' }}>
       {!hideHeader && <Header />}
-      <main style={{ padding: '32px', maxWidth: '1400px', margin: '0 auto' }}>
+      <main style={{ width: '100%', padding: '0 10%' }}>
         {/* Header Section */}
         <div style={{
           backgroundColor: 'white',
@@ -134,6 +177,60 @@ const RecordsPage = ({ hideHeader }) => {
               }}>
                 {filteredRecords.length} of {records.length} records
               </p>
+              {/* Active Filters Indicator */}
+              {(search || filters.gender || filters.dateOfBirth) && (
+                <div style={{
+                  marginTop: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  flexWrap: 'wrap'
+                }}>
+                  <span style={{
+                    fontSize: '12px',
+                    color: '#6b7280',
+                    fontWeight: '500'
+                  }}>
+                    Active filters:
+                  </span>
+                  {search && (
+                    <span style={{
+                      padding: '4px 8px',
+                      backgroundColor: '#dbeafe',
+                      color: '#1e40af',
+                      borderRadius: '4px',
+                      fontSize: '12px',
+                      fontWeight: '500'
+                    }}>
+                      Name: "{search}"
+                    </span>
+                  )}
+                  {filters.gender && (
+                    <span style={{
+                      padding: '4px 8px',
+                      backgroundColor: '#dcfce7',
+                      color: '#166534',
+                      borderRadius: '4px',
+                      fontSize: '12px',
+                      fontWeight: '500'
+                    }}>
+                      Gender: {filters.gender}
+                    </span>
+                  )}
+                  {filters.dateOfBirth && (
+                    <span style={{
+                      padding: '4px 8px',
+                      backgroundColor: '#fef3c7',
+                      color: '#92400e',
+                      borderRadius: '4px',
+                      fontSize: '12px',
+                      fontWeight: '500'
+                    }}>
+                      DOB: {filters.dateOfBirth}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
             <button
               onClick={exportToCSV}
@@ -168,7 +265,7 @@ const RecordsPage = ({ hideHeader }) => {
           </div>
 
           {/* Search Bar */}
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative', marginBottom: '16px' }}>
             <input
               type="text"
               placeholder="Search by full name..."
@@ -202,6 +299,142 @@ const RecordsPage = ({ hideHeader }) => {
             }}>
               🔍
             </div>
+          </div>
+
+          {/* Filter Controls */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '16px'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              flex: '1'
+            }}>
+              {/* Gender Filter */}
+              <div style={{ minWidth: '120px' }}>
+                <select
+                  value={filters.gender}
+                  onChange={(e) => setFilters(prev => ({ ...prev, gender: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    outline: 'none',
+                    backgroundColor: 'white',
+                    cursor: 'pointer'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#6366f1';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(99, 102, 241, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#d1d5db';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                >
+                  <option value="">All Genders</option>
+                  {uniqueGenders.map(gender => (
+                    <option key={gender} value={gender}>
+                      {gender === 'MALE' ? 'Male' : gender === 'FEMALE' ? 'Female' : gender}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Date of Birth Filter */}
+              <div style={{ minWidth: '150px' }}>
+                <select
+                  value={filters.dateOfBirth}
+                  onChange={(e) => setFilters(prev => ({ ...prev, dateOfBirth: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    outline: 'none',
+                    backgroundColor: 'white',
+                    cursor: 'pointer',
+                    marginBottom: '4px'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#6366f1';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(99, 102, 241, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#d1d5db';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                >
+                  <option value="">All Dates</option>
+                  {uniqueDates.map(date => (
+                    <option key={date} value={date}>{date}</option>
+                  ))}
+                </select>
+                <input
+                  type="text"
+                  placeholder="Or enter custom date"
+                  value={filters.dateOfBirth}
+                  onChange={(e) => setFilters(prev => ({ ...prev, dateOfBirth: e.target.value }))}
+                  style={{
+                    width: '100%',
+                    padding: '6px 10px',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '4px',
+                    fontSize: '12px',
+                    outline: 'none'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#6366f1';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(99, 102, 241, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#d1d5db';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                />
+                <div style={{
+                  fontSize: '11px',
+                  color: '#9ca3af',
+                  marginTop: '2px'
+                }}>
+                  Select from list or type custom
+                </div>
+              </div>
+            </div>
+
+            {/* Clear Filters Button */}
+            {(filters.gender || filters.dateOfBirth) && (
+              <button
+                onClick={() => setFilters({ gender: '', dateOfBirth: '' })}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#f3f4f6',
+                  color: '#374151',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  whiteSpace: 'nowrap'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#e5e7eb';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = '#f3f4f6';
+                }}
+              >
+                Clear Filters
+              </button>
+            )}
           </div>
         </div>
 
@@ -244,10 +477,12 @@ const RecordsPage = ({ hideHeader }) => {
             }}>
               <div style={{ fontSize: '48px', marginBottom: '16px' }}>📝</div>
               <p style={{ fontSize: '18px', margin: '0 0 8px 0' }}>
-                {search ? 'No records found' : 'No birth certificates registered yet'}
+                {search || filters.gender || filters.dateOfBirth ? 'No records found' : 'No birth certificates registered yet'}
               </p>
               <p style={{ fontSize: '14px', margin: '0' }}>
-                {search ? 'Try adjusting your search terms' : 'Start by uploading your first certificate'}
+                {search || filters.gender || filters.dateOfBirth 
+                  ? 'Try adjusting your search terms or filters' 
+                  : 'Start by uploading your first certificate'}
               </p>
             </div>
           ) : (
@@ -361,17 +596,7 @@ const RecordsPage = ({ hideHeader }) => {
                     }}>
                       Uploaded By
                     </th>
-                    <th style={{
-                      padding: '16px 20px',
-                      textAlign: 'left',
-                      fontWeight: '600',
-                      color: '#374151',
-                      fontSize: '13px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em'
-                    }}>
-                      Actions
-                    </th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -454,28 +679,7 @@ const RecordsPage = ({ hideHeader }) => {
                       }}>
                         {record.uploadedBy?.fullName || 'Unknown'}
                       </td>
-                      <td style={{
-                        padding: '16px 20px'
-                      }}>
-                        <Link to={`/review/${record._id}`} style={{
-                          padding: '6px 12px',
-                          backgroundColor: '#f3f4f6',
-                          color: '#374151',
-                          borderRadius: '6px',
-                          fontSize: '12px',
-                          fontWeight: '500',
-                          textDecoration: 'none',
-                          transition: 'all 0.2s'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.backgroundColor = '#e5e7eb';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.backgroundColor = '#f3f4f6';
-                        }}>
-                          View
-                        </Link>
-                      </td>
+
                     </tr>
                   ))}
                 </tbody>
