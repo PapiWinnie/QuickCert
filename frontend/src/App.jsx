@@ -16,7 +16,7 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <div className="bg-gray-100 min-h-screen">
+        <div style={{ minHeight: '100vh' }}>
           <Routes>
             {/* Public Route */}
             <Route path="/login" element={<LoginPage />} />
