@@ -31,6 +31,7 @@ const RecordsPage = ({ hideHeader }) => {
           throw new Error(data.message || 'Failed to fetch records');
         }
         const data = await res.json();
+        console.log('Records data received:', data);
         setRecords(data);
       } catch (err) {
         setError(err.message);
@@ -80,7 +81,7 @@ const RecordsPage = ({ hideHeader }) => {
                     <th className="px-3 py-2 border">Mother</th>
                     <th className="px-3 py-2 border">Cert. #</th>
                     <th className="px-3 py-2 border">Created</th>
-                    {auth.role !== 'admin' && <th className="px-3 py-2 border">Action</th>}
+                    {/* <th className="px-3 py-2 border">Action</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -94,16 +95,14 @@ const RecordsPage = ({ hideHeader }) => {
                       <td className="px-3 py-2 border">{rec.motherName}</td>
                       <td className="px-3 py-2 border">{rec.certificateNumber}</td>
                       <td className="px-3 py-2 border">{new Date(rec.createdAt).toLocaleDateString()}</td>
-                      {auth.role !== 'admin' && (
-                        <td className="px-3 py-2 border">
-                          <Link
-                            to={`/review/${rec._id}`}
-                            className="px-3 py-1 text-xs font-semibold text-white bg-indigo-600 rounded hover:bg-indigo-700"
-                          >
-                            View/Edit
-                          </Link>
-                        </td>
-                      )}
+                      {/* <td className="px-3 py-2 border">
+                        <Link
+                          to={`/review/${rec._id}`}
+                          className="px-3 py-1 text-xs font-semibold text-white bg-indigo-600 rounded hover:bg-indigo-700"
+                        >
+                          View/Edit
+                        </Link>
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>
