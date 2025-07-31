@@ -226,7 +226,7 @@ const DashboardPage = () => {
             value={stats.thisMonth}
             icon="📅"
             color="#dcfce7"
-            description="New records this month"
+            description="New records this month" 
           />
           <StatCard
             title="Pending Review"
