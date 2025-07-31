@@ -87,7 +87,7 @@ const AdminDashboard = () => {
       <main className="container p-6 mx-auto">
         <div className="p-8 bg-white rounded-lg shadow-md max-w-xl mx-auto mb-8">
           <h1 className="mb-4 text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-          <h2 className="mb-2 text-xl font-semibold">Register a New Registry Officer</h2>
+          <h2 className="mb-6 text-xl font-semibold text-gray-700">Register a New Registry Officer</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
               type="text"
@@ -96,7 +96,7 @@ const AdminDashboard = () => {
               value={form.fullName}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border rounded"
+              className="w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
             <input
               type="email"
@@ -105,7 +105,7 @@ const AdminDashboard = () => {
               value={form.email}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border rounded"
+              className="w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
             <input
               type="password"
@@ -114,16 +114,16 @@ const AdminDashboard = () => {
               value={form.password}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border rounded"
+              className="w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
             <button
               type="submit"
-              className="w-full px-4 py-2 font-semibold text-white bg-indigo-600 rounded hover:bg-indigo-700"
+              className="w-full px-4 py-2 font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Register Officer
             </button>
-            {status && <p className="text-green-600">{status}</p>}
-            {error && <p className="text-red-600">{error}</p>}
+            {status && <p className="text-green-600 text-center">{status}</p>}
+            {error && <p className="text-red-600 text-center">{error}</p>}
           </form>
         </div>
         {/* Admin can view all officers below */}
@@ -136,7 +136,7 @@ const AdminDashboard = () => {
               placeholder="Search officer by full name..."
               value={officerSearch}
               onChange={e => setOfficerSearch(e.target.value)}
-              className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
           {officerLoading ? (
@@ -146,23 +146,23 @@ const AdminDashboard = () => {
           ) : filteredOfficers.length === 0 ? (
             <p>No officers found.</p>
           ) : (
-            <table className="min-w-full text-sm text-left text-gray-700 border">
-              <thead className="bg-gray-100">
+            <table className="min-w-full text-sm text-left text-gray-700 border border-gray-300 rounded-lg overflow-hidden">
+              <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-3 py-2 border">Full Name</th>
-                  <th className="px-3 py-2 border">Email</th>
-                  <th className="px-3 py-2 border">Action</th>
+                  <th className="px-4 py-3 border-b border-gray-300 font-semibold text-gray-900">Full Name</th>
+                  <th className="px-4 py-3 border-b border-gray-300 font-semibold text-gray-900">Email</th>
+                  <th className="px-4 py-3 border-b border-gray-300 font-semibold text-gray-900">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredOfficers.map((officer) => (
-                  <tr key={officer._id} className="hover:bg-gray-50">
-                    <td className="px-3 py-2 border">{officer.fullName}</td>
-                    <td className="px-3 py-2 border">{officer.email}</td>
-                    <td className="px-3 py-2 border">
+                  <tr key={officer._id} className="hover:bg-gray-50 border-b border-gray-200">
+                    <td className="px-4 py-3">{officer.fullName}</td>
+                    <td className="px-4 py-3">{officer.email}</td>
+                    <td className="px-4 py-3">
                       <button
                         onClick={() => handleDeleteOfficer(officer._id)}
-                        className="px-3 py-1 text-xs font-semibold text-white bg-red-600 rounded hover:bg-red-700"
+                        className="px-3 py-1 text-xs font-semibold text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                       >
                         Delete
                       </button>

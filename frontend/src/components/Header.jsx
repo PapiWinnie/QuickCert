@@ -17,15 +17,15 @@ const Header = () => {
         <Link to="/dashboard" className="text-xl font-bold text-indigo-600 hover:text-indigo-800">
           QuickCert
         </Link>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-4">
           {auth.isAuthenticated && (
-            <span className="text-gray-600">
+            <span className="text-gray-600 whitespace-nowrap">
               Welcome, <span className="font-semibold capitalize">{auth.role}</span>
             </span>
           )}
           <button
             onClick={handleLogout}
-            className="px-4 py-2 font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            className="px-4 py-2 font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 whitespace-nowrap"
           >
             Logout
           </button>

@@ -12,16 +12,16 @@ const DashboardPage = () => {
           <p className="mb-6 text-gray-600">
             Welcome to your dashboard. From here you can start the OCR process to extract data from a new certificate or view previously submitted records.
           </p>
-          <div className="flex space-x-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <Link 
               to="/upload" 
-              className="px-6 py-3 font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="px-6 py-3 font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-center"
             >
               Upload New Certificate
             </Link>
             <Link 
               to="/records" // We will create this page later
-              className="px-6 py-3 font-semibold text-white bg-green-600 rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              className="px-6 py-3 font-semibold text-white bg-green-600 rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 text-center"
             >
               View Submitted Records
             </Link>
