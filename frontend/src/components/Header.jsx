@@ -12,20 +12,64 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white shadow-md">
-      <div className="container flex items-center justify-between p-4 mx-auto">
-        <Link to="/dashboard" className="text-xl font-bold text-indigo-600 hover:text-indigo-800">
+    <header style={{
+      backgroundColor: 'white',
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+      width: '100%'
+    }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '16px 32px',
+        width: '100%'
+      }}>
+        <Link to="/dashboard" style={{
+          fontSize: '20px',
+          fontWeight: '700',
+          color: '#4f46e5',
+          textDecoration: 'none'
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.color = '#3730a3';
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.color = '#4f46e5';
+        }}>
           QuickCert
         </Link>
-        <div className="flex items-center gap-4">
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px'
+        }}>
           {auth.isAuthenticated && (
-            <span className="text-gray-600 whitespace-nowrap">
-              Welcome, <span className="font-semibold capitalize">{auth.role}</span>
+            <span style={{
+              color: '#4b5563',
+              whiteSpace: 'nowrap'
+            }}>
+              Welcome, <span style={{ fontWeight: '600', textTransform: 'capitalize' }}>{auth.role}</span>
             </span>
           )}
           <button
             onClick={handleLogout}
-            className="px-4 py-2 font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 whitespace-nowrap"
+            style={{
+              padding: '8px 16px',
+              fontWeight: '500',
+              color: 'white',
+              backgroundColor: '#ef4444',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              transition: 'background-color 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = '#dc2626';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = '#ef4444';
+            }}
           >
             Logout
           </button>

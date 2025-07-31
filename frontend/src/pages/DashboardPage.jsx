@@ -228,13 +228,6 @@ const DashboardPage = () => {
             color="#dcfce7"
             description="New records this month" 
           />
-          <StatCard
-            title="Pending Review"
-            value={stats.pendingReview}
-            icon="⏳"
-            color="#fef3c7"
-            description="Awaiting review"
-          />
         </div>
 
         {/* Quick Actions */}
